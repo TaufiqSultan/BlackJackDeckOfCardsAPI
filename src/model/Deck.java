@@ -1,28 +1,28 @@
 package model;
 
+import api.DeckOfCards;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
-
 import java.util.List;
-
 
 public class Deck {
     private List<Card> cards;
 
-    public Deck() {
-        cards = new ArrayList<>();
+    private Deck(List<Card> cards) {
+        this.cards = cards;
     }
 
     public static Deck createNewDeck() throws IOException {
-        Deck deck = new Deck();
-        for (String suit : Card.getSuits()) {
-            for (String value : Card.getValues()) {
-                deck.cards.add(new Card(value, suit));
+        DeckOfCards deckOfCards = DeckOfCards.getInstance();
+        deckOfCards.fetchNewDeck();
+
+        List<Card> cards = new ArrayList<>();
+        for (String suit : Card.getSuit()) { // Accessing instance method using Card instances
+            for (String value : Card.getValue()) { // Accessing instance method using Card instances
+                cards.add(new Card(value, suit));
             }
-        }
-        return deck;
+        return new Deck(cards);
     }
 
     public void shuffle() {
@@ -45,5 +45,4 @@ public class Deck {
     public List<Card> getCards() {
         return cards;
     }
-
 }

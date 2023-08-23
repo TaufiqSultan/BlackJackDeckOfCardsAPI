@@ -1,15 +1,22 @@
 package api;
 
-import java.io.IOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DeckOfCards {
     private static final String API_BASE_URL = "https://deckofcardsapi.com/api/deck/";
+
     private static DeckOfCards instance;
-    private DeckOfCards() {}
+    private String currentDeckId;
+
+    private DeckOfCards() {
+    }
 
     public static DeckOfCards getInstance() {
         if (instance == null) {
@@ -18,9 +25,20 @@ public class DeckOfCards {
         return instance;
     }
 
-    public String drawCards(String deckId, int count) throws IOException {
-        String apiUrl = API_BASE_URL + deckId + "/draw/?count=" + count;
+    public void fetchNewDeck() throws IOException {
+        String apiUrl = API_BASE_URL + "new/shuffle/?deck_count=1";
+        String response = makeApiRequest(apiUrl);
+        currentDeckId = parseDeckId(response);
+    }
+
+    public String drawCards(int count) throws IOException {
+        String apiUrl = API_BASE_URL + currentDeckId + "/draw/?count=" + count;
         return makeApiRequest(apiUrl);
+    }
+
+    private String parseDeckId(String response) {
+        JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+        return jsonObject.get("deck_id").getAsString();
     }
 
     private String makeApiRequest(String apiUrl) throws IOException {

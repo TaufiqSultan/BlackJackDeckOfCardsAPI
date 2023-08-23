@@ -1,17 +1,22 @@
 package service;
 
+import interfaces.PlayerEventListener;
 import model.Card;
 import model.Deck;
 import model.Player;
 
 import java.io.IOException;
 
-public class GameManager {
+public class GameManager implements PlayerEventListener {
     private Deck deck;
     private Player player;
     private Player dealer;
     private InputManager inputManager;
+    private PlayerEventListener playerEventListener;
 
+    public void setPlayerEventListener(PlayerEventListener listener) {
+        this.playerEventListener = listener;
+    }
 
     public void startGame() {
         System.out.println("Welcome to Blackjack!");
@@ -75,7 +80,7 @@ public class GameManager {
             System.out.println("Error connecting to the API: " + e.getMessage());
         }
 
-       // inputManager.closeScanner(); om a koulo mapiema strond dja a ne roko. SHIT MEEHN
+        // inputManager.closeScanner(); om a koulo mapiema strond dja a ne roko. SHIT MEEHN
     }
 
     private int calculatePoints(Player player) {
@@ -90,11 +95,27 @@ public class GameManager {
                 points += Integer.parseInt(cardValue);
             }
         }
+        if (points >= 15) {
+            notifyPlayerEvent("Consider standing, your total is " + points);
+        }
+
         return points;
+    }
+
+    private void notifyPlayerEvent(String message) {
+        if (playerEventListener != null) {
+            playerEventListener.onPlayerEvent(message);
+        }
+    }
+    @Override
+    public void onPlayerEvent(String message) {
+        System.out.println(message);
     }
 
     public static void main(String[] args) {
         GameManager gameManager = new GameManager();
         gameManager.startGame();
     }
+
+
 }

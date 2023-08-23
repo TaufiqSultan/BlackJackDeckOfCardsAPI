@@ -1,11 +1,21 @@
+import interfaces.PlayerEventListener;
 import service.GameManager;
 import service.InputManager;
 
 public class Main {
     public static void main(String[] args) {
-        InputManager inputManager;
+        InputManager inputManager = new InputManager();
         GameManager gameManager = new GameManager();
-        inputManager = new InputManager();
+
+
+        PlayerEventListener playerEventListener = new PlayerEventListener() {
+            @Override
+            public void onPlayerEvent(String message) {
+                System.out.println("Event received: " + message);
+            }
+        };
+
+        gameManager.setPlayerEventListener(playerEventListener);
         while (true) {
             gameManager.startGame();
             System.out.println("Do you want to play again? (y/n)");
