@@ -12,10 +12,12 @@ public class GameManager implements PlayerEventListener {
     private Player dealer;
     private PlayerEventListener playerEventListener;
 
+    // Set a listener for player events
     public void setPlayerEventListener(PlayerEventListener listener) {
         this.playerEventListener = listener;
     }
 
+    // Start a game of Blackjack
     public void startGame() {
         System.out.println("Welcome to Blackjack!");
 
@@ -32,11 +34,16 @@ public class GameManager implements PlayerEventListener {
 
             // Show initial cards
             System.out.println("Player's cards: " + player.getDealtCards());
-            System.out.println("Dealer's visible card: " + dealer.getDealtCards().get(0));
+            if (!dealer.getDealtCards().isEmpty()) {
+                System.out.println("Dealer's visible card: " + dealer.getDealtCards().get(0));
+            } else {
+                System.out.println("Dealer has no visible cards.");
+            }
+
 
             // Player's turn
             while (true) {
-                String decision = InputManager.getPlayerDecision(); // Use inputManager to get the decision
+                String decision = InputManager.getPlayerDecision(); // Using the Strategy pattern for input
 
                 if (decision.equals("hit")) {
                     player.dealCardsFromDeck(deck.getDeckId(), 1);
@@ -59,7 +66,7 @@ public class GameManager implements PlayerEventListener {
             }
             System.out.println("Dealer's cards: " + dealer.getDealtCards());
 
-            // Determine winner
+            // Determine the winner
             int playerPoints = calculatePoints(player);
             int dealerPoints = calculatePoints(dealer);
 
@@ -78,12 +85,13 @@ public class GameManager implements PlayerEventListener {
         }
     }
 
+    // Calculate the points for a player's hand
     private int calculatePoints(Player player) {
         int points = 0;
         int numberOfAces = 0;
 
-        for (model.Card Card : player.getDealtCards()) {
-            String cardValue = Card.getValue();
+        for (model.Card card : player.getDealtCards()) {
+            String cardValue = card.getValue();
 
             if ("KING QUEEN JACK".contains(cardValue)) {
                 points += 10;
@@ -108,18 +116,20 @@ public class GameManager implements PlayerEventListener {
         return points;
     }
 
+    // Notify the player about a game event
     private void notifyPlayerEvent(String message) {
         if (playerEventListener != null) {
             playerEventListener.onPlayerEvent(message);
         }
     }
 
-
+    // Implementation of the PlayerEventListener interface
     @Override
     public void onPlayerEvent(String message) {
         System.out.println(message);
     }
 
+    // Entry point for the game
     public static void main(String[] args) {
         GameManager gameManager = new GameManager();
         gameManager.startGame();

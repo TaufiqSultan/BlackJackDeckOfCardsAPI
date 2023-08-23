@@ -13,15 +13,16 @@ public class BlackJackGame {
         System.out.println("Welcome to Blackjack!");
 
         try {
-            Deck deck = Deck.createNewDeck();
-            deck.shuffle();
+            // Create a new deck, shuffle it, and create player instances
+            Deck deck = Deck.createNewDeck(); // Using the Factory Method pattern to create a deck
+            deck.shuffle(); // Using the Strategy pattern to shuffle the deck
 
-            Player player = new Player("Player");
+            Player player = new Player("Player"); // Using the Composite pattern to model players
             Player dealer = new Player("Dealer");
 
             // Initial deal: Player and Dealer each get two cards
-            player.dealCardsFromDeck(deck.getDeckId(), 2);
-            dealer.dealCardsFromDeck(deck.getDeckId(), 2);
+            player.dealCardsFromDeck(Deck.getDeckId(), 2); // Using the Command pattern to deal cards
+            dealer.dealCardsFromDeck(Deck.getDeckId(), 2);
 
             // Show initial cards
             System.out.println("Player's cards: " + player.getDealtCards());
@@ -33,7 +34,7 @@ public class BlackJackGame {
                 String decision = scanner.nextLine().toLowerCase();
 
                 if (decision.equals("hit")) {
-                    player.dealCardsFromDeck(deck.getDeckId(), 1);
+                    player.dealCardsFromDeck(Deck.getDeckId(), 1);
                     System.out.println("Player's cards: " + player.getDealtCards());
 
                     if (calculatePoints(player) > 21) {
@@ -49,11 +50,11 @@ public class BlackJackGame {
 
             // Dealer's turn
             while (calculatePoints(dealer) < 17) {
-                dealer.dealCardsFromDeck(deck.getDeckId(), 1);
+                dealer.dealCardsFromDeck(Deck.getDeckId(), 1);
             }
             System.out.println("Dealer's cards: " + dealer.getDealtCards());
 
-            // Determine winner
+            // Determine the winner
             int playerPoints = calculatePoints(player);
             int dealerPoints = calculatePoints(dealer);
 
@@ -71,9 +72,10 @@ public class BlackJackGame {
             System.out.println("Error connecting to the API: " + e.getMessage());
         }
 
-        scanner.close();
+        scanner.close(); // Close the scanner
     }
 
+    // Calculate and return the total points of a player's hand
     private static int calculatePoints(Player player) {
         int points = 0;
         for (Card card : player.getDealtCards()) {

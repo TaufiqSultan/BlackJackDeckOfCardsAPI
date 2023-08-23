@@ -3,7 +3,8 @@ package model;
 import api.DeckOfCards;
 
 import java.util.ArrayList;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 public class Player {
     private final String name;
@@ -17,8 +18,8 @@ public class Player {
         return name;
     }
 
-    public ArrayList<Card> getDealtCards() {
-        return dealtCards;
+    public List<Card> getDealtCards() {
+        return Collections.unmodifiableList(dealtCards); // Returning an unmodifiable view of the list
     }
 
     public void addDealtCard(Card card) {
@@ -30,10 +31,12 @@ public class Player {
     }
 
     public void dealCardsFromDeck(String deckId, int num) {
+        DeckOfCards deckOfCards = DeckOfCards.getInstance();
+
         for (int i = 0; i < num; i++) {
-            Card drawnCard = Card.drawCardFromDeck(deckId); // Draw a card using deckId
+            Card drawnCard = Card.drawCardFromDeck(deckId);
             if (drawnCard != null) {
-                addDealtCard(drawnCard); // Add the drawn card to the player's dealt cards
+                addDealtCard(drawnCard);
             }
         }
     }
