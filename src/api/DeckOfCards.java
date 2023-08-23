@@ -14,7 +14,7 @@ public class DeckOfCards {
     private static String currentDeckId;
 
     private DeckOfCards() {
-        // Private constructor to enforce singleton pattern
+        // Private constructor voor singleton pattern
     }
 
     public static DeckOfCards getInstance() {
@@ -28,12 +28,12 @@ public class DeckOfCards {
         String apiUrl = API_BASE_URL + "new";
         String response = makeApiRequest(apiUrl);
         currentDeckId = parseDeckId(response);
-        return currentDeckId; // Return the current deck's ID
+        return currentDeckId;
     }
 
     public String drawCards(String deckId, int count) throws IOException {
         String apiUrl = API_BASE_URL + currentDeckId + "/draw/?count=" + count;
-        return makeApiRequest(apiUrl); // Return the API response for drawn cards
+        return makeApiRequest(apiUrl);
     }
 
     private static String parseDeckId(String response) {

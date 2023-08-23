@@ -9,7 +9,6 @@ public class InputManager {
         this.scanner = new Scanner(System.in);
     }
 
-    // Constructor initializes the scanner instance, using the Singleton pattern-like approach
 
     public static String getPlayerDecision() {
         while (true) {
@@ -27,7 +26,6 @@ public class InputManager {
         }
     }
 
-    // Method for getting player decisions, involving user input and error handling
 
     public void closeScanner() {
         scanner.close();

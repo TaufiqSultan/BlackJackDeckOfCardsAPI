@@ -12,12 +12,10 @@ public class GameManager implements PlayerEventListener {
     private Player dealer;
     private PlayerEventListener playerEventListener;
 
-    // Set a listener for player events
     public void setPlayerEventListener(PlayerEventListener listener) {
         this.playerEventListener = listener;
     }
 
-    // Start a game of Blackjack
     public void startGame() {
         System.out.println("Welcome to Blackjack!");
 
@@ -28,11 +26,9 @@ public class GameManager implements PlayerEventListener {
             player = new Player("Player");
             dealer = new Player("Dealer");
 
-            // Initial deal: Player and Dealer each get two cards
             player.dealCardsFromDeck(deck.getDeckId(), 2);
             dealer.dealCardsFromDeck(deck.getDeckId(), 2);
 
-            // Show initial cards
             System.out.println("Player's cards: " + player.getDealtCards());
             if (!dealer.getDealtCards().isEmpty()) {
                 System.out.println("Dealer's visible card: " + dealer.getDealtCards().get(0));
@@ -41,7 +37,6 @@ public class GameManager implements PlayerEventListener {
             }
 
 
-            // Player's turn
             while (true) {
                 String decision = InputManager.getPlayerDecision(); // Using the Strategy pattern for input
 
@@ -60,13 +55,11 @@ public class GameManager implements PlayerEventListener {
                 }
             }
 
-            // Dealer's turn
             while (calculatePoints(dealer) < 17) {
                 dealer.dealCardsFromDeck(deck.getDeckId(), 1);
             }
             System.out.println("Dealer's cards: " + dealer.getDealtCards());
 
-            // Determine the winner
             int playerPoints = calculatePoints(player);
             int dealerPoints = calculatePoints(dealer);
 
@@ -85,7 +78,6 @@ public class GameManager implements PlayerEventListener {
         }
     }
 
-    // Calculate the points for a player's hand
     private int calculatePoints(Player player) {
         int points = 0;
         int numberOfAces = 0;
@@ -103,7 +95,6 @@ public class GameManager implements PlayerEventListener {
             }
         }
 
-        // Adjust points if there are aces and the total points exceed 21
         while (numberOfAces > 0 && points > 21) {
             points -= 10;
             numberOfAces--;
@@ -116,20 +107,17 @@ public class GameManager implements PlayerEventListener {
         return points;
     }
 
-    // Notify the player about a game event
     private void notifyPlayerEvent(String message) {
         if (playerEventListener != null) {
             playerEventListener.onPlayerEvent(message);
         }
     }
 
-    // Implementation of the PlayerEventListener interface
     @Override
     public void onPlayerEvent(String message) {
         System.out.println(message);
     }
 
-    // Entry point for the game
     public static void main(String[] args) {
         GameManager gameManager = new GameManager();
         gameManager.startGame();
