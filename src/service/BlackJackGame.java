@@ -1,6 +1,5 @@
 package service;
 
-
 import model.Card;
 import model.Deck;
 import model.Player;
@@ -21,8 +20,8 @@ public class BlackJackGame {
             Player dealer = new Player("Dealer");
 
             // Initial deal: Player and Dealer each get two cards
-            player.addDealtCard(deck.drawCards(2));
-            dealer.addDealtCard(deck.drawCards(2));
+            player.dealCardsFromDeck(deck.getDeckId(), 2);
+            dealer.dealCardsFromDeck(deck.getDeckId(), 2);
 
             // Show initial cards
             System.out.println("Player's cards: " + player.getDealtCards());
@@ -34,7 +33,7 @@ public class BlackJackGame {
                 String decision = scanner.nextLine().toLowerCase();
 
                 if (decision.equals("hit")) {
-                    player.addDealtCard(deck.drawCards(1));
+                    player.dealCardsFromDeck(deck.getDeckId(), 1);
                     System.out.println("Player's cards: " + player.getDealtCards());
 
                     if (calculatePoints(player) > 21) {
@@ -50,7 +49,7 @@ public class BlackJackGame {
 
             // Dealer's turn
             while (calculatePoints(dealer) < 17) {
-                dealer.addDealtCard(deck.drawCards(1));
+                dealer.dealCardsFromDeck(deck.getDeckId(), 1);
             }
             System.out.println("Dealer's cards: " + dealer.getDealtCards());
 

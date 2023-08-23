@@ -3,13 +3,13 @@ package service;
 import java.util.Scanner;
 
 public class InputManager {
-    private Scanner scanner;
+    private static Scanner scanner;
 
     public InputManager() {
         this.scanner = new Scanner(System.in);
     }
 
-    public String getPlayerDecision() {
+    public static String getPlayerDecision() {
         while (true) {
             System.out.print("Do you want to hit or stand? ");
             try {
@@ -28,5 +28,4 @@ public class InputManager {
     public void closeScanner() {
         scanner.close();
     }
-
 }

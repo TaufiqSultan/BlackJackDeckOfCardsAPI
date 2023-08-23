@@ -13,7 +13,7 @@ public class DeckOfCards {
     private static final String API_BASE_URL = "https://deckofcardsapi.com/api/deck/";
 
     private static DeckOfCards instance;
-    private String currentDeckId;
+    private static String currentDeckId;
 
     private DeckOfCards() {
     }
@@ -25,23 +25,24 @@ public class DeckOfCards {
         return instance;
     }
 
-    public void fetchNewDeck() throws IOException {
+    public static String fetchNewDeck() throws IOException {
         String apiUrl = API_BASE_URL + "new/shuffle/?deck_count=1";
         String response = makeApiRequest(apiUrl);
         currentDeckId = parseDeckId(response);
+        return apiUrl;
     }
 
-    public String drawCards(int count) throws IOException {
+    public String drawCards(String deckId, int count) throws IOException {
         String apiUrl = API_BASE_URL + currentDeckId + "/draw/?count=" + count;
         return makeApiRequest(apiUrl);
     }
 
-    private String parseDeckId(String response) {
+    private static String parseDeckId(String response) {
         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
         return jsonObject.get("deck_id").getAsString();
     }
 
-    private String makeApiRequest(String apiUrl) throws IOException {
+    private static String makeApiRequest(String apiUrl) throws IOException {
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

@@ -1,7 +1,6 @@
 package service;
 
 import interfaces.PlayerEventListener;
-import model.Card;
 import model.Deck;
 import model.Player;
 
@@ -11,7 +10,6 @@ public class GameManager implements PlayerEventListener {
     private Deck deck;
     private Player player;
     private Player dealer;
-    private InputManager inputManager;
     private PlayerEventListener playerEventListener;
 
     public void setPlayerEventListener(PlayerEventListener listener) {
@@ -29,8 +27,8 @@ public class GameManager implements PlayerEventListener {
             dealer = new Player("Dealer");
 
             // Initial deal: Player and Dealer each get two cards
-            player.addDealtCard(deck.drawCards(2));
-            dealer.addDealtCard(deck.drawCards(2));
+            player.dealCardsFromDeck(deck.getDeckId(), 2);
+            dealer.dealCardsFromDeck(deck.getDeckId(), 2);
 
             // Show initial cards
             System.out.println("Player's cards: " + player.getDealtCards());
@@ -38,11 +36,10 @@ public class GameManager implements PlayerEventListener {
 
             // Player's turn
             while (true) {
-                this.inputManager = new InputManager();
-                String decision = inputManager.getPlayerDecision();
+                String decision = InputManager.getPlayerDecision(); // Use inputManager to get the decision
 
                 if (decision.equals("hit")) {
-                    player.addDealtCard(deck.drawCards(1));
+                    player.dealCardsFromDeck(deck.getDeckId(), 1);
                     System.out.println("Player's cards: " + player.getDealtCards());
 
                     if (calculatePoints(player) > 21) {
@@ -58,7 +55,7 @@ public class GameManager implements PlayerEventListener {
 
             // Dealer's turn
             while (calculatePoints(dealer) < 17) {
-                dealer.addDealtCard(deck.drawCards(1));
+                dealer.dealCardsFromDeck(deck.getDeckId(), 1);
             }
             System.out.println("Dealer's cards: " + dealer.getDealtCards());
 
@@ -79,22 +76,31 @@ public class GameManager implements PlayerEventListener {
         } catch (IOException e) {
             System.out.println("Error connecting to the API: " + e.getMessage());
         }
-
-        // inputManager.closeScanner(); om a koulo mapiema strond dja a ne roko. SHIT MEEHN
     }
 
     private int calculatePoints(Player player) {
         int points = 0;
-        for (Card card : player.getDealtCards()) {
-            String cardValue = card.getValue();
+        int numberOfAces = 0;
+
+        for (model.Card Card : player.getDealtCards()) {
+            String cardValue = Card.getValue();
+
             if ("KING QUEEN JACK".contains(cardValue)) {
                 points += 10;
             } else if (cardValue.equals("ACE")) {
+                numberOfAces++;
                 points += 11;
             } else {
                 points += Integer.parseInt(cardValue);
             }
         }
+
+        // Adjust points if there are aces and the total points exceed 21
+        while (numberOfAces > 0 && points > 21) {
+            points -= 10;
+            numberOfAces--;
+        }
+
         if (points >= 15) {
             notifyPlayerEvent("Consider standing, your total is " + points);
         }
@@ -107,6 +113,8 @@ public class GameManager implements PlayerEventListener {
             playerEventListener.onPlayerEvent(message);
         }
     }
+
+
     @Override
     public void onPlayerEvent(String message) {
         System.out.println(message);
@@ -116,6 +124,4 @@ public class GameManager implements PlayerEventListener {
         GameManager gameManager = new GameManager();
         gameManager.startGame();
     }
-
-
 }

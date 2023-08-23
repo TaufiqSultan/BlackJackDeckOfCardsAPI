@@ -1,6 +1,7 @@
 package model;
 
 import api.DeckOfCards;
+import model.Card;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,15 +16,19 @@ public class Deck {
 
     public static Deck createNewDeck() throws IOException {
         DeckOfCards deckOfCards = DeckOfCards.getInstance();
-        deckOfCards.fetchNewDeck();
+        String deckId = DeckOfCards.fetchNewDeck(); // Fetch a new deck using the API
 
         List<Card> cards = new ArrayList<>();
-        for (String suit : Card.getSuit()) { // Accessing instance method using Card instances
-            for (String value : Card.getValue()) { // Accessing instance method using Card instances
+
+        for (String suit : Card.getPossibleSuits()) {
+            for (String value : Card.getPossibleValues()) {
                 cards.add(new Card(value, suit));
             }
+        }
+
         return new Deck(cards);
     }
+
 
     public void shuffle() {
         for (int i = cards.size() - 1; i > 0; i--) {
@@ -44,5 +49,10 @@ public class Deck {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public static String getDeckId() {
+        String deckId = null;
+        return null; // Getter for the deck ID
     }
 }
