@@ -75,7 +75,7 @@ public class GameManager {
             System.out.println("Error connecting to the API: " + e.getMessage());
         }
 
-        inputManager.closeScanner();
+       // inputManager.closeScanner(); om a koulo mapiema strond dja a ne roko. SHIT MEEHN
     }
 
     private int calculatePoints(Player player) {

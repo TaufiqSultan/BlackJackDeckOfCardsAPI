@@ -14,6 +14,7 @@ public class Main {
                 break;
             }
         }
-        inputManager.closeScanner(); // Close the scanner properly
+        inputManager.closeScanner(); // Close the scanner after the loop
     }
+
 }

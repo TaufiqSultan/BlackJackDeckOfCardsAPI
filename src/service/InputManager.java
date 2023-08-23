@@ -28,4 +28,5 @@ public class InputManager {
     public void closeScanner() {
         scanner.close();
     }
+
 }
